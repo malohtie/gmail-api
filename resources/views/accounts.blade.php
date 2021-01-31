@@ -60,16 +60,16 @@
                 }
             },
             {
-                title: "Action",
+                title: "action",
                 data: null,
                 className: "text-center",
                 orderable: false,
                 render: function (data, type, row) {
-                    const status = `<button data-id="${row.id}" class="btn btn-sm btn-warning>${row.is_active ? 'disable' : 'enable'}</button>&nbsp;`;
                     let auth = '';
-                    if (row.is_active && !row.token) {
-                        auth = `<button data-id="${row.id}" class="btn btn-sm btn-primary>${row.is_active ? 'disable' : 'enable'}</button>&nbsp;`;
+                    if (row.is_active && row.token) {
+                        auth = `<button data-id="${row.id}" class="btn btn-sm btn-primary auth">AUTH</button>&nbsp;`;
                     }
+                    const status = `<button data-id="${row.id}" data-action="${!row.is_active ? 1 : 0}" class="btn btn-sm btn-warning status">${row.is_active ? 'disable' : 'enable'}</button>&nbsp;`;
                     return status + auth;
                 }
             },
@@ -98,30 +98,22 @@
             e.preventDefault();
             const btn = this;
             const id = $(btn).data('id');
+            const status = $(btn).data('action');
 
-            $(btn).attr("disabled", true).html(spinner);
-            const apikey = $("#apikey").val();
+            $(btn).attr("disabled", true);
             $.ajax({
                 url: '{{ route('account.status', ':id') }}'.replace(':id', id),
-                type: "post",
+                type: "patch",
                 dataType: "json",
                 data: {
-                    apikey,
-                    domain,
-                    ipadr,
-                    id,
+                    status
                 }
             }).done(function (res) {
-                Swal.fire({
-                    icon: res.status ? 'success' : 'error',
-                    title: res.status ? 'Done' : 'Oops',
-                    text: res.data
-                })
+                table.ajax.reload();
             }).always(function () {
-                $(btn).attr("disabled", false).html("SET RDNS");
+                $(btn).attr("disabled", false);
             });
         });
-
 
         $("#add").click(function (e) {
             e.preventDefault();

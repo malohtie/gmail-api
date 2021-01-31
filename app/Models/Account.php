@@ -13,4 +13,9 @@ class Account extends Model
         'email',
         'is_active'
     ];
+
+    protected $casts = [
+        'token' => 'array',
+        'is_active' => 'boolean'
+    ];
 }
