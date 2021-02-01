@@ -65,12 +65,10 @@
                 className: "text-center",
                 orderable: false,
                 render: function (data, type, row) {
-                    let auth = '';
-                    if (row.is_active && !row.token) {
-                        auth = `<button data-id="${row.id}" class="btn btn-sm btn-primary auth">AUTH</button>&nbsp;`;
-                    }
+                    const auth = `<button data-id="${row.id}" class="btn btn-sm btn-primary auth">${!row.token ? 'AUTH' : 'REAUTH'}</button>&nbsp;`;
                     const status = `<button data-id="${row.id}" data-action="${!row.is_active ? 1 : 0}" class="btn btn-sm btn-warning status">${row.is_active ? 'disable' : 'enable'}</button>&nbsp;`;
-                    return status + auth;
+                    const del = `<button data-id="${row.id}" class="btn btn-sm btn-danger del">DELETE</button>&nbsp;`;
+                    return status + auth + del;
                 }
             },
         ];
@@ -117,7 +115,30 @@
             e.preventDefault();
             const btn = this;
             const id = $(btn).data('id');
-            window.open('{{ route('account.status', ':id') }}'.replace(':id', id), '_blank');
+            window.open('{{ route('account.auth', ':id') }}'.replace(':id', id), '_blank');
+        }).on("click", ".del", function (e) {
+            e.preventDefault();
+            const btn = this;
+            const id = $(btn).data('id');
+            if(confirm('Are You Sure ?')) {
+                $(btn).attr("disabled", true);
+                $.ajax({
+                    url: '{{ route('account.delete', ':id') }}'.replace(':id', id),
+                    type: "delete",
+                    dataType: "json",
+                }).done(function (res) {
+                    if (res.status)
+                        table.ajax.reload();
+                    else
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops",
+                            text: "Failed"
+                        });
+                }).always(function () {
+                    $(btn).attr("disabled", false);
+                });
+            }
         });
 
         $("#add").click(function (e) {

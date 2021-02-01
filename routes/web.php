@@ -20,3 +20,5 @@ Route::get('accounts', [AccountController::class, 'index'])->name('account.index
 Route::post('accounts/add', [AccountController::class, 'add'])->name('account.add');
 Route::patch('accounts/status/{account}', [AccountController::class, 'status'])->name('account.status');
 Route::get('accounts/auth/{account}', [AccountController::class, 'auth'])->name('account.auth');
+Route::delete('accounts/delete/{account}', [AccountController::class, 'delete'])->name('account.delete');
+Route::get('accounts/callback', [AccountController::class, 'callbackAuth'])->name('account.callback');
