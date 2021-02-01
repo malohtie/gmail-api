@@ -66,7 +66,7 @@
                 orderable: false,
                 render: function (data, type, row) {
                     let auth = '';
-                    if (row.is_active && row.token) {
+                    if (row.is_active && !row.token) {
                         auth = `<button data-id="${row.id}" class="btn btn-sm btn-primary auth">AUTH</button>&nbsp;`;
                     }
                     const status = `<button data-id="${row.id}" data-action="${!row.is_active ? 1 : 0}" class="btn btn-sm btn-warning status">${row.is_active ? 'disable' : 'enable'}</button>&nbsp;`;
@@ -113,6 +113,11 @@
             }).always(function () {
                 $(btn).attr("disabled", false);
             });
+        }).on("click", ".auth", function (e) {
+            e.preventDefault();
+            const btn = this;
+            const id = $(btn).data('id');
+            window.open('{{ route('account.status', ':id') }}'.replace(':id', id), '_blank');
         });
 
         $("#add").click(function (e) {
