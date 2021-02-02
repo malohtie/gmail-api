@@ -18,14 +18,14 @@ class SettingController extends Controller
     public function make(Account $account, Request $request)
     {
         $request->validate([
-            'from' => ['required', 'string'],
+            'from' => ['nullable', 'string'],
             'subject' => ['required', 'string'],
             'body' => ['required', 'string'],
         ]);
 
         if($account->is_active && !empty($account->token)) {
             $gmail = new Gmail($account);
-
+            $vacation = $gmail->setVacation($request->subject, $request->body);
             return response()->json([
                 'status' => true,
                 'message' => 'OK'

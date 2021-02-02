@@ -7,6 +7,7 @@ namespace App\Libs;
 use App\Models\Account;
 use Google_Client;
 use Google_Service_Gmail;
+use Google_Service_Gmail_VacationSettings;
 
 class Gmail
 {
@@ -60,27 +61,41 @@ class Gmail
         return $service->users->getProfile('me');
     }
 
+    private function reAuth()
+    {
+        $data = $this->account->token;
+        $this->client->setAccessToken($data);
+        if ($this->client->isAccessTokenExpired()) {
+            $token = $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+            $this->account->token = $token;
+            $this->account->save();
+        }
+    }
+
+    public function setVacation(string $subject, string $body)
+    {
+        $this->reAuth();
+        $vacation = new Google_Service_Gmail_VacationSettings();
+        $vacation->setEnableAutoReply(true);
+        $vacation->setResponseSubject($subject);
+        $vacation->setResponseBodyHtml($body);
+        $vacation->setStartTime(now()->getPreciseTimestamp(3));
+        $vacation->setEndTime(now()->addYears(1)->getPreciseTimestamp(3));
+        $service = new Google_Service_Gmail($this->client);
+        return $service->users_settings->updateVacation('me', $vacation);
+    }
+
     public function disconnect(): bool
     {
         return $this->client->revokeToken();
     }
 
-    /**
-     * Safe Base64 Encode Url
-     * @param $inputStr
-     * @return string
-     */
-    public static function base64UrlEncode($inputStr)
+    public static function base64UrlEncode($inputStr): string
     {
         return strtr(base64_encode($inputStr), '+/=', '-_,');
     }
 
-    /**
-     * Safe Base64 Decode Url
-     * @param $inputStr
-     * @return false|string
-     */
-    public static function base64UrlDecode($inputStr)
+    public static function base64UrlDecode($inputStr): string
     {
         return base64_decode(strtr($inputStr, '-_,', '+/='));
     }
