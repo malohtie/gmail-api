@@ -75,7 +75,7 @@ class AccountController extends Controller
                 if(isset($token['error'])) {
                     return response()->json(['status' => false, 'message' => 'could not generate token']);
                 }
-                $email = $gmail->profil();
+                $email = $gmail->profile();
                 if ($email->emailAddress == $account->email) {
                     $account->token = $token;
                     $account->save();

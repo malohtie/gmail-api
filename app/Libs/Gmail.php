@@ -38,14 +38,15 @@ class Gmail
         return $this->client->createAuthUrl();
     }
 
-    public function makeAuth(string $code)
+    public function makeAuth(string $code): array
     {
-        $token = '';
         $data = $this->account->token;
         if (!empty($data) && !empty($data['access_token'])) {
             $this->client->setAccessToken($data);
             if ($this->client->isAccessTokenExpired()) {
                 $token = $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+            } else {
+                $token = $this->account->token;
             }
         } else {
             $token = $this->client->fetchAccessTokenWithAuthCode($code);
@@ -53,7 +54,7 @@ class Gmail
         return $token;
     }
 
-    public function profil()
+    public function profile()
     {
         $service = new Google_Service_Gmail($this->client);
         return $service->users->getProfile('me');
