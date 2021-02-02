@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +23,6 @@ Route::patch('accounts/status/{account}', [AccountController::class, 'status'])-
 Route::get('accounts/auth/{account}', [AccountController::class, 'auth'])->name('account.auth');
 Route::delete('accounts/delete/{account}', [AccountController::class, 'delete'])->name('account.delete');
 Route::get('accounts/callback', [AccountController::class, 'callbackAuth'])->name('account.callback');
+
+Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+Route::post('settings/{account}', [SettingController::class, 'make'])->name('settings.make');
