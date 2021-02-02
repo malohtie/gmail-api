@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\SettingController;
+use App\Http\Controllers\VacationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,5 +24,5 @@ Route::get('accounts/auth/{account}', [AccountController::class, 'auth'])->name(
 Route::delete('accounts/delete/{account}', [AccountController::class, 'delete'])->name('account.delete');
 Route::get('accounts/callback', [AccountController::class, 'callbackAuth'])->name('account.callback');
 
-Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
-Route::post('settings/{account}', [SettingController::class, 'make'])->name('settings.make');
+Route::get('vacations', [VacationController::class, 'index'])->name('vacations.index');
+Route::post('vacations/{account}', [VacationController::class, 'make'])->name('vacations.make');

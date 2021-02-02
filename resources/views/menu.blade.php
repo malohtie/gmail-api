@@ -8,9 +8,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/settings">
-                    <span data-feather="settings"></span>
-                    SETTINGS
+                <a class="nav-link" href="/vacations">
+                    <span data-feather="send"></span>
+                    VACATION
                 </a>
             </li>
         </ul>

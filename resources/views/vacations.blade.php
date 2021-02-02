@@ -1,6 +1,6 @@
 @extends('base')
 
-@section('title', 'Settings')
+@section('title', 'Vacations')
 
 @section('menu')
     @include('menu')
@@ -21,10 +21,6 @@
                    @endforeach
                </select>
            </div>
-            <div class="form-group">
-                <label for="from">From:</label>
-                <input type="text" id="from" class="form-control"/>
-            </div>
             <div class="form-group">
                 <label for="subject">Subject:</label>
                 <input type="text" id="subject" class="form-control"/>
@@ -61,10 +57,9 @@
             e.preventDefault();
             const accounts = $('#accounts').val();
             if (accounts.length > 0) {
-                const from = $("#from").val();
                 const subject = $("#subject").val();
                 const body = $("#body").val();
-                if(from && subject && body)
+                if(subject && body)
                 {
                     $("#result").html("");
                     $.each(accounts, (i, v) => {
@@ -77,7 +72,7 @@
                         );
 
                         $.ajax({
-                            url: "{{ route('settings.make', ':id') }}".replace(":id", v),
+                            url: "{{ route('vacations.make', ':id') }}".replace(":id", v),
                             method: "post",
                             dataType: "json",
                             data: {

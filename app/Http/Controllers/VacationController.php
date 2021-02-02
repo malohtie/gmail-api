@@ -6,11 +6,11 @@ use App\Libs\Gmail;
 use App\Models\Account;
 use Illuminate\Http\Request;
 
-class SettingController extends Controller
+class VacationController extends Controller
 {
     public function index()
     {
-        return view('settings', [
+        return view('vacations', [
             'accounts' => Account::where('is_active', true)->whereNotNull('token')->get(['id', 'email'])
         ]);
     }
@@ -18,7 +18,6 @@ class SettingController extends Controller
     public function make(Account $account, Request $request)
     {
         $request->validate([
-            'from' => ['nullable', 'string'],
             'subject' => ['required', 'string'],
             'body' => ['required', 'string'],
         ]);
@@ -27,10 +26,11 @@ class SettingController extends Controller
             $gmail = new Gmail($account);
             $vacation = $gmail->setVacation($request->subject, $request->body);
             return response()->json([
-                'status' => true,
-                'message' => 'OK'
+                'status' => $vacation,
+                'message' => $vacation ? 'OK' : 'ERROR'
             ]);
         }
+
         return response()->json([
             'status' => false,
             'message' => 'Account Not Active Or Auth Not Set'

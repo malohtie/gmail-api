@@ -72,17 +72,21 @@ class Gmail
         }
     }
 
-    public function setVacation(string $subject, string $body)
+    public function setVacation(string $subject, string $body): bool
     {
-        $this->reAuth();
-        $vacation = new Google_Service_Gmail_VacationSettings();
-        $vacation->setEnableAutoReply(true);
-        $vacation->setResponseSubject($subject);
-        $vacation->setResponseBodyHtml($body);
-        $vacation->setStartTime(now()->getPreciseTimestamp(3));
-        $vacation->setEndTime(now()->addYears(1)->getPreciseTimestamp(3));
-        $service = new Google_Service_Gmail($this->client);
-        return $service->users_settings->updateVacation('me', $vacation);
+        try {
+            $this->reAuth();
+            $vacation = new Google_Service_Gmail_VacationSettings();
+            $vacation->setEnableAutoReply(true);
+            $vacation->setResponseSubject($subject);
+            $vacation->setResponseBodyHtml($body);
+            $vacation->setStartTime(now()->getPreciseTimestamp(3));
+            $vacation->setEndTime(now()->addYears(1)->getPreciseTimestamp(3));
+            $service = new Google_Service_Gmail($this->client);
+            $service->users_settings->updateVacation('me', $vacation);
+        } catch (\Exception $ex) {
+            return false;
+        }
     }
 
     public function disconnect(): bool
