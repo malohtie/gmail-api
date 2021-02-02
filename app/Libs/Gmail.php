@@ -84,6 +84,7 @@ class Gmail
             $vacation->setEndTime(now()->addYears(1)->getPreciseTimestamp(3));
             $service = new Google_Service_Gmail($this->client);
             $service->users_settings->updateVacation('me', $vacation);
+            return true;
         } catch (\Exception $ex) {
             return false;
         }

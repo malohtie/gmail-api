@@ -8,6 +8,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="/froms">
+                    <span data-feather="at-sign"></span>
+                    FROMS
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="/vacations">
                     <span data-feather="send"></span>
                     VACATION

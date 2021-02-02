@@ -76,7 +76,6 @@
                             method: "post",
                             dataType: "json",
                             data: {
-                                from,
                                 subject,
                                 body
                             }
