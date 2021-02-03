@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\FromController;
 use App\Http\Controllers\VacationController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,9 @@ Route::patch('accounts/status/{account}', [AccountController::class, 'status'])-
 Route::get('accounts/auth/{account}', [AccountController::class, 'auth'])->name('account.auth');
 Route::delete('accounts/delete/{account}', [AccountController::class, 'delete'])->name('account.delete');
 Route::get('accounts/callback', [AccountController::class, 'callbackAuth'])->name('account.callback');
+
+Route::get('froms', [FromController::class, 'index'])->name('froms.index');
+Route::post('froms/{account}', [FromController::class, 'make'])->name('froms.make');
 
 Route::get('vacations', [VacationController::class, 'index'])->name('vacations.index');
 Route::post('vacations/{account}', [VacationController::class, 'make'])->name('vacations.make');
