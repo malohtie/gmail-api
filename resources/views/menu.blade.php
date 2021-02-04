@@ -2,6 +2,12 @@
     <div class="sidebar-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">
+                <a class="nav-link" href="/apis">
+                    <span data-feather="server"></span>
+                    API
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="/accounts">
                     <span data-feather="server"></span>
                     ACCOUNTS
