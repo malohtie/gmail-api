@@ -11,6 +11,7 @@ class Account extends Model
 
     protected $fillable = [
         'email',
+        'api_id',
         'is_active'
     ];
 
@@ -18,4 +19,9 @@ class Account extends Model
         'token' => 'array',
         'is_active' => 'boolean'
     ];
+
+    public function api()
+    {
+        return $this->belongsTo(Api::class);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Libs\Gmail;
 use App\Models\Account;
+use App\Models\Api;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -13,27 +14,33 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()) {
-            return response()->json(['data' => Account::all()]);
+        if ($request->ajax()) {
+            return response()->json(['data' => Account::whereHas('api', fn($q) => $q->where('is_active', true))->get()]);
         }
-        return view('accounts');
+        return view('accounts', [
+            'apis' => Api::where('is_active', true)->get(['id', 'name'])
+        ]);
     }
 
     public function add(Request $request)
     {
         $request->validate([
+            'api' => 'required|numeric',
             'accounts' => 'required|array'
         ]);
 
         $nb = 0;
         foreach ($request->accounts as $account) {
             $email = strtolower($account);
-            if(!Account::where('email', $email)->exists()) {
-                $res = Account::create([
-                    'email' => $email,
-                    'is_active' => true
-                ]);
-                $res && $nb++;
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                if (!Account::where('email', $email)->exists()) {
+                    $res = Account::create([
+                        'email' => $email,
+                        'api_id' => $request->api,
+                        'is_active' => true
+                    ]);
+                    $res && $nb++;
+                }
             }
         }
 
@@ -48,13 +55,13 @@ class AccountController extends Controller
      * @param Account $account
      * @param Request $request
      */
-    public function auth(Account $account, Request  $request)
+    public function auth(Account $account, Request $request)
     {
-        if($account->is_active) {
+        if ($account->is_active) {
             $url = (new Gmail($account))->createAuth();
             return response()->redirectTo($url);
         }
-        return response()->json(['status' => false , 'message' => 'account not active']);
+        return response()->json(['status' => false, 'message' => 'account not active']);
     }
 
     /**
@@ -72,7 +79,7 @@ class AccountController extends Controller
             if (!empty($state['account']) && $account = Account::find($state['account'])) {
                 $gmail = new Gmail($account);
                 $token = $gmail->makeAuth($code);
-                if(isset($token['error'])) {
+                if (isset($token['error'])) {
                     return response()->json(['status' => false, 'message' => 'could not generate token']);
                 }
                 $email = $gmail->profile();

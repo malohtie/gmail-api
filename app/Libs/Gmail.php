@@ -19,9 +19,9 @@ class Gmail
     {
         $this->account = $account;
         $this->client = new Google_Client([
-            'client_secret' => config('gmail.client_secret'),
-            'client_id' => config('gmail.client_id'),
-            'redirect_uri' => url(config('gmail.redirect_url')),
+            'client_secret' => $account->api->client_secret,
+            'client_id' => $account->api->client_id,
+            'redirect_uri' => url('accounts/callback'),
             'state' => self::base64UrlEncode(json_encode([
                 'account' => $account->id,
             ])),

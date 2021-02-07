@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\FromController;
 use App\Http\Controllers\VacationController;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('', 'accounts');
+Route::redirect('', 'accounts');
+
+Route::get('apis', [ApiController::class, 'index'])->name('api.index');
+Route::patch('apis/status/{api}', [ApiController::class, 'status'])->name('api.status');
+Route::post('apis/add', [ApiController::class, 'add'])->name('api.add');
+//Route::delete('apis/delete/{api}', [ApiController::class, 'delete'])->name('api.delete');
 
 Route::get('accounts', [AccountController::class, 'index'])->name('account.index');
 Route::post('accounts/add', [AccountController::class, 'add'])->name('account.add');

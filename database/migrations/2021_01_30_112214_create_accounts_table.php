@@ -18,6 +18,7 @@ class CreateAccountsTable extends Migration
             $table->string('email');
             $table->json('token')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->foreignId('api_id');
             $table->timestamps();
         });
     }
